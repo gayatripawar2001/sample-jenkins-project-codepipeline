@@ -1,0 +1,32 @@
+version: 0.0
+os: linux   # For Linux-based EC2 instance (use 'windows' if deploying to a Windows instance)
+
+files:
+  # Copy all assets (HTML, CSS, JS, etc.) from the source bundle to the desired location on the EC2 instance
+  - source: /index.html
+    destination: /var/www/html/index.html
+  - source: /about.html
+    destination: /var/www/html/about.html
+  - source: /assets/script.js
+    destination: /var/www/html/assets/script.js
+  - source: /assets/style.css
+    destination: /var/www/html/assets/style.css
+
+hooks:
+  BeforeInstall:
+    # (Optional) Add any actions to take before installing (e.g., clean old files)
+    - location: scripts/clean_up_old_files.sh
+      runas: root
+  AfterInstall:
+    # (Optional) Add any actions to take after the new version is installed (e.g., setting permissions)
+    - location: scripts/set_permissions.sh
+      runas: root
+  ApplicationStart:
+    # (Optional) Ensure your web server is running (e.g., restart Apache or Nginx)
+    - location: scripts/start_web_server.sh
+      runas: root
+  ValidateService:
+    # (Optional) Validate the deployment, check if the website is live
+    - location: scripts/validate_service.sh
+      runas: root
+
